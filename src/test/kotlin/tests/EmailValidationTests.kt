@@ -1,5 +1,6 @@
 package tests
 
+import appium.core.utilities.RandomGenerator
 import constants.PathConstants
 import entities.EmailCredential
 import filehandlers.JsonParser
@@ -14,11 +15,20 @@ class EmailValidationTests : TestBase() {
     @Test(description = "Validation Email Functionality")
     fun validateEmailFunctionality() {
         val emailCredentialsPath = Paths.get(PathConstants.TestResourcesDirectory, "EmailCredentials.json").toString()
+        val attachmentFilePath = Paths.get(PathConstants.TestResourcesDirectory, "Attachment.pdf").toString()
+        val devicePathToPickAttachment = "AppiumFiles/Attachment.pdf"
+
         val emailCredentials = JsonParser.getData<Array<EmailCredential>>(emailCredentialsPath)
         val yahooAccount = "yahoo"
         val senderEmailCredentials = emailCredentials.first()
         val recipientEmailCredentials = emailCredentials.last()
+        val emailSubjectAndContent = RandomGenerator.generateUUID()
 
+        deviceDriver.pushFile(attachmentFilePath, devicePathToPickAttachment)
+
+        /***
+         * Setup Sender and recipient email accounts
+         */
         deviceDriver
             .launchApp<LaunchScreen>()
             .clickSignInWithYahoo()
@@ -27,6 +37,18 @@ class EmailValidationTests : TestBase() {
             .initiateAddingAnotherAccount(account = yahooAccount)
             .addEmailAccount<HomeScreen>(emailCredential = recipientEmailCredentials)
             .skipTutorial()
+
+        /**
+         * Send Email with attachment to Recipient
+         */
+        HomeScreen(driver)
+            .clickCompose()
+            .addRecipient(recipientEmailCredentials.email)
+            .addSubject(emailSubjectAndContent)
+            .addContent(emailSubjectAndContent)
+            .clickAddAttachment()
+            .attachFile(devicePathToPickAttachment)
+            .sendMail()
     }
 
 }

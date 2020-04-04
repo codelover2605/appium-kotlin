@@ -12,7 +12,7 @@ class LoginScreen(val androidDriverProvider: AndroidDriverProvider) {
 
     inline fun <reified T> addEmailAccount(emailCredential: EmailCredential): T {
         val usernameTextBox = WebViewTextBox(androidDriverProvider, userNameTextBoxSelector)
-        usernameTextBox.setText(emailCredential.username)
+        usernameTextBox.setText(emailCredential.email)
         progressBarScreen.waitForLoading()
 
         val passwordTextBox = WebViewTextBox(androidDriverProvider, passwordTextBoxLocator)

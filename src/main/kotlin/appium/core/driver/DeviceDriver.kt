@@ -3,6 +3,7 @@ package appium.core.driver
 import constants.Configuration
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
 
 class DeviceDriver(val androidDriverProvider: AndroidDriverProvider) {
 
@@ -50,6 +51,16 @@ class DeviceDriver(val androidDriverProvider: AndroidDriverProvider) {
         } catch (error: Exception) {
             logger.error("Error uninstalling Application. ${error.message}")
             throw error("Error installing Application. ${error.message}")
+        }
+    }
+
+    fun pushFile(sourceFilePath: String, destinationFilePath: String) {
+        try {
+            val fileToBePushedToDevice = File(sourceFilePath)
+            instance.pushFile("/sdcard/$destinationFilePath", fileToBePushedToDevice)
+        } catch (error: Exception) {
+            logger.error("Error pushing file. ${error.message}")
+            throw error(error)
         }
     }
 

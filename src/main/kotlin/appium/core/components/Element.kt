@@ -83,6 +83,10 @@ open class Element(
         }
     }
 
+    fun clear() {
+        getElement().clear()
+    }
+
     fun waitTillVisible(timeOutInSeconds: Long = 10) {
         try {
             val wait = FluentWait(driverInstance)

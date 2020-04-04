@@ -20,6 +20,7 @@ class WebViewTextBox(
         try {
             val element = Element(androidDriverProvider, locator)
             element.waitTillVisible()
+            element.clear()
             element.click()
             element.waitTillVisible()
 

@@ -1,7 +1,7 @@
 package entities
 
 data class EmailCredential(
-    val username: String,
+    val email: String,
     val password: String
 )
 
