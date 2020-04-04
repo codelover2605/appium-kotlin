@@ -1,0 +1,10 @@
+{
+  "platformName": "Android",
+  "automationName": "UiAutomator2",
+  "deviceName": "Android",
+  "appPackage": "com.yahoo.mobile.client.android.mail",
+  "appActivity": "activity.MainActivity",
+  "autoLaunch": "false",
+  "newCommandTimeout": 300,
+  "appWaitForLaunch": true
+}
