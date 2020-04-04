@@ -42,6 +42,7 @@ class EmailValidationTests : TestBase() {
          * Send Email with attachment to Recipient
          */
         HomeScreen(driver)
+            .switchAccount(senderEmailCredentials.email)
             .clickCompose()
             .addRecipient(recipientEmailCredentials.email)
             .addSubject(emailSubjectAndContent)
@@ -49,6 +50,16 @@ class EmailValidationTests : TestBase() {
             .clickAddAttachment()
             .attachFile(devicePathToPickAttachment)
             .sendMail()
+            .openSentFolder()
+            .waitTillMailPresent(emailSubjectAndContent)
+
+        HomeScreen(driver)
+            .switchAccount(recipientEmailCredentials.email)
+            .waitTillMailPresent(emailSubjectAndContent)
+            .openMail(emailSubjectAndContent)
+            .downloadAttachment()
+
+        deviceDriver.pullFile("Attachment.pdf")
     }
 
 }

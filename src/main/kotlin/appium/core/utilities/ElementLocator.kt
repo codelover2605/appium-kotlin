@@ -18,7 +18,7 @@ object ElementLocator {
             Text -> By.xpath("//*[${buildCaseInsensitiveXpath(locatorValue, false)}]")
             PartialText -> By.xpath("//*[${buildCaseInsensitiveXpath(locatorValue)}]")
             ResourceId, Id -> By.xpath("//*[@resource-id='${Configuration.AppPackage}:id/$locatorValue']")
-            ContentDesc -> By.xpath("//*[${buildCaseInsensitiveXpath("content-desc", locatorValue)}")
+            ContentDesc -> By.xpath("//*[${buildCaseInsensitiveXpath("content-desc", locatorValue)}]")
             else -> throw error("$locatorType not a valid locator Type")
         }
     }

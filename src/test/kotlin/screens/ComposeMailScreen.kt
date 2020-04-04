@@ -43,10 +43,10 @@ class ComposeMailScreen(private val androidDriverProvider: AndroidDriverProvider
         return FileManagerScreen(androidDriverProvider)
     }
 
-    fun sendMail(): ComposeMailScreen {
+    fun sendMail(): HomeScreen {
         val sendButton = Element(androidDriverProvider, sendButtonLocator)
         sendButton.click()
-        return this
+        return HomeScreen(androidDriverProvider)
     }
     
 }

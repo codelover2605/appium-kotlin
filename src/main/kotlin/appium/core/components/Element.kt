@@ -119,7 +119,7 @@ open class Element(
         }
     }
 
-    fun waitTillPresent(timeOutInSeconds: Long = 10): Boolean {
+    fun waitTillPresent(timeOutInSeconds: Long = 20): Boolean {
         return try {
             val wait = FluentWait(driverInstance)
                 .withTimeout(Duration.ofSeconds(timeOutInSeconds))

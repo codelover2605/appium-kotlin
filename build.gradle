@@ -38,6 +38,8 @@ dependencies {
     // Extent Reports dependency
     compile group: 'com.aventstack', name: 'extentreports', version: '4.0.9'
 
+    compile group: 'org.awaitility', name: 'awaitility', version: '4.0.2'
+
 }
 
 compileKotlin {

@@ -1,9 +1,12 @@
 package appium.core.driver
 
 import constants.Configuration
+import filehandlers.FileWriter
+import org.awaitility.Awaitility
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.time.Duration
 
 class DeviceDriver(val androidDriverProvider: AndroidDriverProvider) {
 
@@ -62,6 +65,20 @@ class DeviceDriver(val androidDriverProvider: AndroidDriverProvider) {
             logger.error("Error pushing file. ${error.message}")
             throw error(error)
         }
+    }
+
+    fun pullFile(fileName: String, timeOutInSeconds: Long = 30) {
+        var fileContents: ByteArray? = null
+        Awaitility.await().ignoreExceptions().atMost(Duration.ofSeconds(timeOutInSeconds)).until {
+            fileContents = instance.pullFile("/sdcard/Download/$fileName")
+            fileContents?.isNotEmpty() == true
+        }
+
+        if (fileContents == null) {
+            throw error("File $fileName not found")
+        }
+
+        FileWriter.writeToFile(fileContents ?: error("File Content is null"), fileName)
     }
 
 }
