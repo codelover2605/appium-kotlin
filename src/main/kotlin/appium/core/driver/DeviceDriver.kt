@@ -67,7 +67,7 @@ class DeviceDriver(val androidDriverProvider: AndroidDriverProvider) {
         }
     }
 
-    fun pullFile(fileName: String, timeOutInSeconds: Long = 30) {
+    fun pullFile(fileName: String, timeOutInSeconds: Long = 30): String {
         var fileContents: ByteArray? = null
         Awaitility.await().ignoreExceptions().atMost(Duration.ofSeconds(timeOutInSeconds)).until {
             fileContents = instance.pullFile("/sdcard/Download/$fileName")
@@ -78,7 +78,7 @@ class DeviceDriver(val androidDriverProvider: AndroidDriverProvider) {
             throw error("File $fileName not found")
         }
 
-        FileWriter.writeToFile(fileContents ?: error("File Content is null"), fileName)
+        return FileWriter.writeToFile(fileContents ?: error("File Content is null"), fileName)
     }
 
 }

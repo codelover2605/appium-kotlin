@@ -4,6 +4,7 @@ import appium.core.utilities.RandomGenerator
 import constants.PathConstants
 import entities.EmailCredential
 import filehandlers.JsonParser
+import filehandlers.PdfParser
 import org.testng.annotations.Test
 import screens.HomeScreen
 import screens.LaunchScreen
@@ -15,16 +16,10 @@ class EmailValidationTests : TestBase() {
     @Test(description = "Validation Email Functionality")
     fun validateEmailFunctionality() {
         val emailCredentialsPath = Paths.get(PathConstants.TestResourcesDirectory, "EmailCredentials.json").toString()
-        val attachmentFilePath = Paths.get(PathConstants.TestResourcesDirectory, "Attachment.pdf").toString()
-        val devicePathToPickAttachment = "AppiumFiles/Attachment.pdf"
-
         val emailCredentials = JsonParser.getData<Array<EmailCredential>>(emailCredentialsPath)
-        val yahooAccount = "yahoo"
         val senderEmailCredentials = emailCredentials.first()
         val recipientEmailCredentials = emailCredentials.last()
         val emailSubjectAndContent = RandomGenerator.generateUUID()
-
-        deviceDriver.pushFile(attachmentFilePath, devicePathToPickAttachment)
 
         /***
          * Setup Sender and recipient email accounts
@@ -34,7 +29,7 @@ class EmailValidationTests : TestBase() {
             .clickSignInWithYahoo()
             .addEmailAccount<OnboardScreen>(emailCredential = senderEmailCredentials)
             .clickNextButton()
-            .initiateAddingAnotherAccount(account = yahooAccount)
+            .initiateAddingAnotherAccount()
             .addEmailAccount<HomeScreen>(emailCredential = recipientEmailCredentials)
             .skipTutorial()
 
@@ -48,18 +43,31 @@ class EmailValidationTests : TestBase() {
             .addSubject(emailSubjectAndContent)
             .addContent(emailSubjectAndContent)
             .clickAddAttachment()
-            .attachFile(devicePathToPickAttachment)
+            .attachFile(deviceFilePathToPickAttachment)
             .sendMail()
             .openSentFolder()
             .waitTillMailPresent(emailSubjectAndContent)
 
+        /**
+         * Switch to Recipient Account and Download Attachment
+         */
         HomeScreen(driver)
             .switchAccount(recipientEmailCredentials.email)
             .waitTillMailPresent(emailSubjectAndContent)
             .openMail(emailSubjectAndContent)
             .downloadAttachment()
 
-        deviceDriver.pullFile("Attachment.pdf")
+        /**
+         * Validate Attachment Content
+         */
+        val downloadedAttachmentFilePath = deviceDriver.pullFile(attachmentFileName)
+
+        val sentAttachmentFileContent = PdfParser.getPdfContent(attachmentFilePath)
+        val receivedAttachmentFileContent = PdfParser.getPdfContent(downloadedAttachmentFilePath)
+
+        assert(sentAttachmentFileContent == receivedAttachmentFileContent)
+        { "Sent: $sentAttachmentFileContent but received $receivedAttachmentFileContent" }
+
     }
 
 }

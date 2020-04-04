@@ -19,7 +19,7 @@ class OnboardScreen(private val androidDriverProvider: AndroidDriverProvider) {
         return this
     }
 
-    fun initiateAddingAnotherAccount(account: String): LoginScreen {
+    fun initiateAddingAnotherAccount(account: String = "yahoo"): LoginScreen {
         val accountImage = Element(androidDriverProvider, ElementLocator.get(Text, account))
         accountImage.click()
 

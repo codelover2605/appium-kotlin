@@ -7,15 +7,18 @@ import java.nio.file.Paths
 
 object FileWriter {
 
-    fun writeToFile(fileContents: ByteArray, destinationFileName: String) {
+    fun writeToFile(fileContents: ByteArray, destinationFileName: String): String {
         val fileDownloadDirectory = File(PathConstants.RootDirectory, "files")
         if (!fileDownloadDirectory.exists()) {
             fileDownloadDirectory.mkdir()
         }
 
-        val fileStream = FileOutputStream(Paths.get(fileDownloadDirectory.absolutePath, destinationFileName).toString())
+        val outputFilePath = Paths.get(fileDownloadDirectory.absolutePath, destinationFileName).toString()
+        val fileStream = FileOutputStream(outputFilePath)
         fileStream.write(fileContents)
         fileStream.close()
+
+        return outputFilePath
     }
 
 }
