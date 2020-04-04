@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Yahoo Tests" parallel="classes">
+
+    <test name="Yahoo Email Validation Tests">
+        <parameter name="deviceId" value="ZY224W9VDZ"></parameter>
+        <classes>
+            <class name="tests.EmailValidationTests"/>
+        </classes>
+    </test>
+</suite>

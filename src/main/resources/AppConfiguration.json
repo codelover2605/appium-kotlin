@@ -6,5 +6,7 @@
   "appActivity": "activity.MainActivity",
   "autoLaunch": "false",
   "newCommandTimeout": 300,
-  "appWaitForLaunch": true
+  "appWaitForLaunch": true,
+  "unicodeKeyboard": false,
+  "resetKeyboard": false
 }

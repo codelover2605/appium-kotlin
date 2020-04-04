@@ -15,8 +15,8 @@ object ElementLocator {
     fun get(locatorType: String, locatorValue: String): By {
         return when (locatorType) {
             Xpath -> By.xpath(locatorValue)
-            Text -> By.xpath(buildCaseInsensitiveXpath(locatorValue, false))
-            PartialText -> By.xpath(buildCaseInsensitiveXpath(locatorValue))
+            Text -> By.xpath("//*[${buildCaseInsensitiveXpath(locatorValue, false)}]")
+            PartialText -> By.xpath("//*[${buildCaseInsensitiveXpath(locatorValue)}]")
             ResourceId, Id -> By.xpath("//*[@resource-id='${Configuration.AppPackage}:id/$locatorValue']")
             ContentDesc -> By.xpath("//*[${buildCaseInsensitiveXpath("content-desc", locatorValue)}")
             else -> throw error("$locatorType not a valid locator Type")

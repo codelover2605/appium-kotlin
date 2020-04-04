@@ -1,5 +1,8 @@
 package appium.core.components
 
+import appium.core.components.contracts.Clickable
+import appium.core.components.contracts.Gettable
+import appium.core.components.contracts.Touchable
 import appium.core.driver.AndroidDriverProvider
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
@@ -11,9 +14,6 @@ import org.openqa.selenium.support.pagefactory.ByChained
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.FluentWait
 import org.slf4j.LoggerFactory
-import appium.core.components.contracts.Touchable
-import appium.core.components.contracts.Clickable
-import appium.core.components.contracts.Gettable
 import java.time.Duration
 
 open class Element(
@@ -40,39 +40,27 @@ open class Element(
             wait.until { hasAttribute(attributeName) }
             return getElement().getAttribute(attributeName)
         } catch (error: Exception) {
+            logger.error("Error Getting Attribute Value. ${error.message}")
             throw error(error)
         }
     }
 
     override fun getTextValue(): String {
         try {
-            val wait = FluentWait(driverInstance)
-                .withTimeout(Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(200))
-                .ignoring(ElementNotInteractableException::class.java)
-                .ignoring(StaleElementReferenceException::class.java)
-                .ignoring(NoSuchElementException::class.java)
-                .ignoring(InvalidElementStateException::class.java)
-                .ignoring(TimeoutException::class.java)
-
-            return wait.until { getElement().text }
+            waitTillVisible()
+            return getElement().text
         } catch (error: Exception) {
+            logger.error("Error getting text value. ${error.message}")
             throw error(error)
         }
     }
 
     override fun click() {
         try {
-            val wait = FluentWait(driverInstance)
-                .withTimeout(Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(200))
-                .ignoring(ElementNotInteractableException::class.java)
-                .ignoring(StaleElementReferenceException::class.java)
-                .ignoring(NoSuchElementException::class.java)
-                .ignoring(InvalidElementStateException::class.java)
-
-            wait.until { getElement().click() }
+            waitTillVisible()
+            getElement().click()
         } catch (error: Exception) {
+            logger.error("Error clicking Element $locator. ${error.message}")
             throw error(error)
         }
     }
@@ -81,6 +69,7 @@ open class Element(
         try {
             touchAction.tap(ElementOption.element(getElement())).perform()
         } catch (error: Exception) {
+            logger.error("Error Tapping Element. ${error.message}")
             throw error(error)
         }
     }
@@ -89,6 +78,7 @@ open class Element(
         try {
             touchAction.longPress(ElementOption.element(getElement())).perform()
         } catch (error: Exception) {
+            logger.error("Error performing Long Pressing. ${error.message}")
             throw Exception(error)
         }
     }
@@ -105,6 +95,7 @@ open class Element(
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(locator))
         } catch (error: Exception) {
+            logger.error("Error waiting for element to be visible. ${error.message}")
             throw error(error)
         }
     }
@@ -113,27 +104,14 @@ open class Element(
         return try {
             val wait = FluentWait(driverInstance)
                 .withTimeout(Duration.ofSeconds(timeOutInSeconds))
-                .pollingEvery(Duration.ofMillis(200))
+                .pollingEvery(Duration.ofMillis(250))
                 .ignoring(ElementNotInteractableException::class.java)
                 .ignoring(NoSuchElementException::class.java)
 
             wait.until(ExpectedConditions.invisibilityOfElementLocated(locator))
         } catch (error: Exception) {
-            false
-        }
-    }
-
-    fun waitTillAttributeContains(attribute: String, value: String, timeOutInSeconds: Long = 10): Boolean {
-        return try {
-            val wait = FluentWait(driverInstance)
-                .withTimeout(Duration.ofSeconds(timeOutInSeconds))
-                .pollingEvery(Duration.ofSeconds(1))
-                .ignoring(NoSuchElementException::class.java)
-                .ignoring(NoSuchElementException::class.java)
-
-            wait.until(ExpectedConditions.attributeContains(locator, attribute, value))
-        } catch (error: Exception) {
-            false
+            logger.error("Error waiting for element to be invisible. ${error.message}")
+            throw error(error)
         }
     }
 
@@ -147,6 +125,7 @@ open class Element(
             val element = wait.until(ExpectedConditions.presenceOfElementLocated(locator))
             return element != null
         } catch (error: Exception) {
+            logger.error("Error waiting for element to be present. ${error.message}")
             false
         }
     }
@@ -170,7 +149,7 @@ open class Element(
     }
 
     private fun buildLocator(): By {
-        return if (parentLocator == null)
+        return if (parentLocator != null)
             ByChained(parentLocator, locator)
         else locator
     }

@@ -1,8 +1,7 @@
 package appium.core.driver
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import constants.Configuration
+import filehandlers.JsonParser
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
@@ -13,7 +12,6 @@ import io.appium.java_client.service.local.flags.GeneralServerFlag
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.BufferedReader
 import java.io.File
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -62,7 +60,7 @@ class AndroidDriverProvider(
             AndroidDriver<MobileElement>(URL("http://${localHostIpAddress}:$port/wd/hub"), capabilities)
         } catch (error: Exception) {
             logger.error("Error initializing Driver: ${error.message}")
-            throw error("Error initializing Android Driver. ${error.message}")
+            throw error(error)
         }
     }
 
@@ -74,11 +72,7 @@ class AndroidDriverProvider(
                 throw error("${Configuration.AppConfigurationFilePath} doesn't exist")
             }
 
-            val gson = Gson()
-            val bufferedReader: BufferedReader = appConfigurationFile.bufferedReader()
-            val configurationString = bufferedReader.use { it.readText() }
-            val configuration: Map<String, *> =
-                gson.fromJson(configurationString, object : TypeToken<Map<String, *>>() {}.type)
+            val configuration: Map<String, *> = JsonParser.getData(Configuration.AppConfigurationFilePath)
 
             val capabilities = DesiredCapabilities()
             configuration.forEach { (key, value) -> capabilities.setCapability(key, value) }
@@ -87,7 +81,7 @@ class AndroidDriverProvider(
             capabilities.setCapability(MobileCapabilityType.APP, Configuration.ApkPath)
             capabilities.setCapability(MobileCapabilityType.UDID, udid)
 
-            logger.info("Device Capabilities: ${gson.toJson(capabilities)}")
+            logger.info("Device Capabilities: ${capabilities.toJson()}")
             capabilities
         } catch (error: Exception) {
             logger.error("Error getting desired capabilities. ${error.message}")
@@ -122,7 +116,7 @@ class AndroidDriverProvider(
             appiumService?.stop()
         } catch (error: Exception) {
             logger.error("Error stopping Appium Server. ${error.message}")
-            throw Exception("Error stopping Appium Server. ${error.message}")
+            throw error(error)
         }
     }
 
