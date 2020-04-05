@@ -13,10 +13,11 @@ class HomeScreen(private val androidDriverProvider: AndroidDriverProvider) {
     private val folderSwitcherIconLocator = ElementLocator.get(Id, "item_primary_icon")
     private val sentFolderLocator = ElementLocator.get(Text, "Sent")
     private val avatarButtonLocator = ElementLocator.get(Id, "avatar_button")
+    private val progressBarScreen = ProgressBarScreen(androidDriverProvider)
 
     fun skipTutorial(): HomeScreen {
         val skipTutorialButton = Element(androidDriverProvider, tutorialCancelButtonLocator)
-        skipTutorialButton.waitTillVisible()
+        progressBarScreen.waitForLoading()
         skipTutorialButton.click()
         return this
     }
