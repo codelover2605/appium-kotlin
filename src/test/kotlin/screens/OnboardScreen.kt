@@ -9,6 +9,7 @@ import appium.core.utilities.Text
 class OnboardScreen(private val androidDriverProvider: AndroidDriverProvider) {
 
     private val nextButtonLocator = ElementLocator.get(Id, "set_theme")
+    private val skipAddingAnotherAccountLocator = ElementLocator.get(Text, "Skip")
     private val progressBarScreen = ProgressBarScreen(androidDriverProvider)
 
     fun clickNextButton(): OnboardScreen {
@@ -28,6 +29,13 @@ class OnboardScreen(private val androidDriverProvider: AndroidDriverProvider) {
         progressBarScreen.waitForLoading()
 
         return LoginScreen(androidDriverProvider)
+    }
+
+    fun skipAddingAnotherAccount(): HomeScreen {
+        val skipButton = Element(androidDriverProvider, skipAddingAnotherAccountLocator)
+        skipButton.click()
+
+        return HomeScreen(androidDriverProvider)
     }
 
 }

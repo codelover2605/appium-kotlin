@@ -30,7 +30,8 @@ class EmailValidationTests : TestBase() {
             .addEmailAccount<OnboardScreen>(emailCredential = senderEmailCredentials)
             .clickNextButton()
             .initiateAddingAnotherAccount()
-            .addEmailAccount<HomeScreen>(emailCredential = recipientEmailCredentials)
+            .addEmailAccount<OnboardScreen>(emailCredential = recipientEmailCredentials)
+            .skipAddingAnotherAccount()
             .skipTutorial()
 
         /**

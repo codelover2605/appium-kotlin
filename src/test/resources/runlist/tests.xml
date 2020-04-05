@@ -3,7 +3,6 @@
 <suite name="Yahoo Tests" parallel="classes">
 
     <test name="Yahoo Email Validation Tests">
-        <parameter name="deviceId" value="711KPWQ0665385"></parameter>
         <classes>
             <class name="tests.EmailValidationTests"/>
         </classes>

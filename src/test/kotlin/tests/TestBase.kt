@@ -2,10 +2,10 @@ package tests
 
 import appium.core.driver.AndroidDriverProvider
 import appium.core.driver.DeviceDriver
+import appium.core.utilities.DeviceFinder
 import constants.PathConstants
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Parameters
 import java.nio.file.Paths
 
 open class TestBase {
@@ -17,9 +17,9 @@ open class TestBase {
     protected val attachmentFilePath = Paths.get(PathConstants.TestResourcesDirectory, attachmentFileName).toString()
     protected val deviceFilePathToPickAttachment = "AppiumFiles/$attachmentFileName"
 
-    @Parameters("deviceId")
     @BeforeMethod
-    fun initialize(deviceId: String) {
+    fun initialize() {
+        val deviceId = DeviceFinder.getConnectedDevices().first()
         driver = AndroidDriverProvider(deviceId)
         deviceDriver = DeviceDriver(driver)
         deviceDriver.uninstallApp()
