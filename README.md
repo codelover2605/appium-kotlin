@@ -47,10 +47,9 @@ Open an email app. Send email with attachment to a recipient. Validate email and
 
 # Steps to run the test
 
-Setup android sdk and adb , Connect an android device
-Disable AutoFill service on the android phone: adb shell settings put secure autofill_service null
-
-## Command
-./gradlew test
+- Setup android sdk and adb
+- Connect an android device
+- Disable AutoFill service on the android phone:<br />adb shell settings put secure autofill_service null
+- Run tests using command:<br />./gradlew test
 
 
