@@ -24,7 +24,7 @@ Open an email app. Send email with attachment to a recipient. Validate email and
 
 - appium.core.driver: Abstraction over Android Driver. Driver Initilaization, Teardown, Starting and stoping Appium Server
 - appium.core.components: Abstraction over Android UI Components for Component Interactions
-- appium.core.utilities: Utility functions
+- appium.core.utilities: Utility functions and Device Finder to get Connected Android Devices
 - constants: Configuration and path Constants
 - filehandlers: FileWriter, PdfParser and JsonParser implementations
 
@@ -48,6 +48,7 @@ Open an email app. Send email with attachment to a recipient. Validate email and
 # Steps to run the test
 
 Setup android sdk and adb , Connect an android device
+Disable AutoFill service on the android phone: adb shell settings put secure autofill_service null
 
 ## Command
 ./gradlew test
